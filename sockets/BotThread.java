@@ -2,16 +2,32 @@ package sockets;
 
 import sockets.Exceptions.InvalidCTCPException;
 import sockets.Exceptions.InvalidCommandException;
+import sockets.Exceptions.InvalidServerCommandException;
 import sockets.Handler.MessageHandler;
 
 /**
+ *  This file is part of Jbot.
+ *
+ *  Jbot is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  Jbot is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Jbot.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
  * Created by mabool on 11/24/15.
  */
 public class BotThread extends Thread {
 
     /**
      * TODO:
-     * - Keep track of own nickname (might be force-changed)
+     * - Keep track of own nickname (might be force-changed by server)
      */
 
     public static final char CTCP_CHAR = '\u0001';
@@ -29,8 +45,9 @@ public class BotThread extends Thread {
      * Takes care of initial connection details, such as setting nick and identifying USER
      */
     public void initConnection() {
-        String outMsg = "NICK " + Config.BOT_NICK + "\n";
-        outMsg += "USER " + Config.BOT_USERNAME + " 8 * : " + Config.BOT_REALNAME;
+        String outMsg = "NICK " + Config.BOT_NICK;
+        outMsg += "\nUSER " + Config.BOT_USERNAME + " 8 * : " + Config.BOT_REALNAME;
+        outMsg += "\nJOIN #coconuts";
         con.sendMessage(outMsg + "\n");
     }
 
@@ -49,11 +66,7 @@ public class BotThread extends Thread {
         if (incMsg[0].trim().equals("PING")) {
             outMsg = "PONG " + serverName;
         } else if (server.equals(serverName)) {
-            switch (code) {
-                case "001":
-                    outMsg = "JOIN #coconuts";
-                    break;
-            }
+            handleServer(what, incMsg);
         } else { /** Handles everything else */
             switch (code) {
                 case "PRIVMSG":
@@ -84,7 +97,7 @@ public class BotThread extends Thread {
                     }
 
                     break;
-                case "NOTICE":
+                case "NOTICE": // Not handling notices for now
                     break;
 
             }
@@ -96,17 +109,31 @@ public class BotThread extends Thread {
         }
     }
 
+    private String handleServer(String message, String[] incMsg) {
+        String outMsg;
+        String code = incMsg[1].trim();
+        try {
+            outMsg = MessageHandler.server(code);
+        } catch (InvalidServerCommandException e) {
+            outMsg = "";
+        }
+
+        return outMsg;
+    }
+
     /**
      * @param nick    The nick of the person initiating the command (Will be used for authentication at a later point?)
      * @param target  The target of the message (channel or nick)
      * @param message The message ie the part after the COMMAND_CHAR
-     * @return
      */
     private String handleCommand(String nick, String target, String message) {
         String outMsg = "PRIVMSG ";
         outMsg += target + " :"; // Send answer to same channel
         try {
-            String command = message.split("\\.")[1];
+            // Removes the command char from the message, to get the command
+            String command = message.split("\\" + Character.toString(Config.COMMAND_CHAR))[1];
+            if (Config.APPEND_NICK_CMD)
+                outMsg += nick + ": ";
             outMsg += MessageHandler.command(command); // Finds the appropriate answer
             System.out.println("Command: " + command);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -120,7 +147,6 @@ public class BotThread extends Thread {
     }
 
     /**
-     *
      * @param nick    The nick of the user to send the message back to
      * @param message The message ie the CTCP command
      */

@@ -6,6 +6,8 @@ import java.net.Socket;
 
 /**
  * Created by mabool on 11/24/15.
+ * TODO:
+ * - Throttled buffer for the output
  */
 public class SenderThread extends Thread {
 

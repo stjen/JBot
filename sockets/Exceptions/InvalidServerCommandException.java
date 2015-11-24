@@ -18,8 +18,8 @@ package sockets.Exceptions;
  *
  * Created by mabool on 11/24/15.
  */
-public class InvalidCTCPException extends Exception {
-    public InvalidCTCPException(String msg) {
+public class InvalidServerCommandException extends Exception {
+    public InvalidServerCommandException(String msg) {
         super(msg);
     }
 }
