@@ -1,6 +1,6 @@
-# JBot - The Java IRC Bot
+# Mambutu - The Java IRC Bot
 
-This is the github page for JBot, the java IRC bot.
+This is the github page for Mambutu, the java IRC bot.
 
 The goal is to make an easily extendable Java IRC bot, a lá eggdrop, but minus the botnet part.
 

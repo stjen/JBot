@@ -6,19 +6,19 @@ import sockets.Exceptions.InvalidServerCommandException;
 import sockets.Handler.MessageHandler;
 
 /**
- *  This file is part of Jbot.
+ *  This file is part of Mambutu.
  *
- *  Jbot is free software: you can redistribute it and/or modify
+ *  Mambutu is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- *  Jbot is distributed in the hope that it will be useful,
+ *  Mambutu is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with Jbot.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with Mambutu.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Created by mabool on 11/24/15.
@@ -47,6 +47,10 @@ public class BotThread extends Thread {
     public void initConnection() {
         String outMsg = "NICK " + Config.BOT_NICK;
         outMsg += "\nUSER " + Config.BOT_USERNAME + " 8 * : " + Config.BOT_REALNAME;
+        // Joins all channels
+        for (int i = 0; i < Config.CHANNELS.split(",").length; i++) {
+            outMsg += "\nJOIN " + Config.CHANNELS.split(",")[i].trim();
+        }
         outMsg += "\nJOIN #coconuts";
         con.sendMessage(outMsg + "\n");
     }
