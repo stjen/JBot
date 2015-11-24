@@ -1,6 +1,5 @@
 package sockets.Handler;
 
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import sockets.BotThread;
 import sockets.Config;
 import sockets.Exceptions.InvalidCTCPException;
@@ -10,8 +9,10 @@ import sockets.Exceptions.InvalidCommandException;
  * Created by mabool on 11/24/15.
  */
 public class MessageHandler {
+
     BotThread bot;
 
+    
     public MessageHandler(BotThread bot) {
         this.bot = bot;
     }

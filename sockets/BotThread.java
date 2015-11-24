@@ -8,22 +8,29 @@ import sockets.Handler.MessageHandler;
  * Created by mabool on 11/24/15.
  */
 public class BotThread extends Thread {
-    private Controller con;
 
+    /**
+     * TODO:
+     * - Keep track of own nickname (might be force-changed)
+     */
+
+    public static final char CTCP_CHAR = '\u0001';
+
+    private Controller con;
 
     public BotThread(Controller con) {
         this.con = con;
     }
 
-    private String SERVER_NAME = "";
-    private final char COMMAND_CHAR = '.';
+    private String serverName = "";
+
 
     /**
      * Takes care of initial connection details, such as setting nick and identifying USER
      */
     public void initConnection() {
-        String outMsg = "NICK testytest\n";
-        outMsg += "USER testies 8 * : TestRealName";
+        String outMsg = "NICK " + Config.BOT_NICK + "\n";
+        outMsg += "USER " + Config.BOT_USERNAME + " 8 * : " + Config.BOT_REALNAME;
         con.sendMessage(outMsg + "\n");
     }
 
@@ -32,17 +39,16 @@ public class BotThread extends Thread {
         String[] incMsg = what.split("\\s+"); // Split by empty space
         String code = incMsg[1].trim(); // Grabs the code from the string
         String server = incMsg[0];
-        if (SERVER_NAME.equals("")) { // set the servername the first time we see it
-            SERVER_NAME = server;
+        if (serverName.equals("")) { // set the servername the first time we see it
+            serverName = server;
         }
-        //System.out.println("Code: " + code);
         String outMsg = "";
         /**
          * Handles server commands
          */
         if (incMsg[0].trim().equals("PING")) {
-            outMsg = "PONG " + SERVER_NAME;
-        } else if (server.equals(SERVER_NAME)) {
+            outMsg = "PONG " + serverName;
+        } else if (server.equals(serverName)) {
             switch (code) {
                 case "001":
                     outMsg = "JOIN #coconuts";
@@ -57,33 +63,24 @@ public class BotThread extends Thread {
                         String nick = what.split("!")[0].split(":")[1]; // The nick that sent it
                         String message = what.split(":")[2]; // The message that was received
                         /* CTCP */
-                        if (message.toCharArray()[0] == '\u0001') { // Ctcps are surrounded by '\u0001'
-                            String ctcp = message.split("\u0001")[1];
-                            try {
-                                outMsg = "NOTICE ";
-                                outMsg += nick + " :\u0001" + MessageHandler.ctcp(ctcp) + "\u0001";
-                            } catch (InvalidCTCPException e) {
-                                System.out.println("Invalid CTCP");
-                                outMsg = ""; // Clears msg so it doesnt get sent
-                            }
+                        if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrounded by '\u0001'
+                            outMsg = handleCTCP(nick, message);
                         }
                         /* Commands */
-                        if (message.toCharArray()[0] == COMMAND_CHAR) {
-                            outMsg = "PRIVMSG ";
-                            outMsg += channel + " :"; // Send answer to same channel
-                            try {
-                                String command = message.split("\\.")[1];
-                                outMsg += MessageHandler.command(command); // Finds the appropriate answer
-                                System.out.println("Command: " + command);
-                            } catch (ArrayIndexOutOfBoundsException e) {
-                                System.out.println("No command");
-                                outMsg = "";
-                            } catch (InvalidCommandException e) {
-                                System.out.println("Invalid command");
-                                outMsg = "";
-                            }
+                        if (message.toCharArray()[0] == Config.COMMAND_CHAR) {
+                            outMsg = handleCommand(nick, channel, message);
                         }
-
+                    } else {
+                        /* Private message */
+                        String nick = what.split("!")[0].split(":")[1]; // The nick that sent it
+                        String message = what.split(":")[2]; // The message that was received
+                        if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrounded by '\u0001'
+                            outMsg = handleCTCP(nick, message);
+                        }
+                        /* Commands */
+                        if (message.toCharArray()[0] == Config.COMMAND_CHAR) {
+                            outMsg = handleCommand(nick, nick, message);
+                        }
                     }
 
                     break;
@@ -99,7 +96,46 @@ public class BotThread extends Thread {
         }
     }
 
+    /**
+     * @param nick    The nick of the person initiating the command (Will be used for authentication at a later point?)
+     * @param target  The target of the message (channel or nick)
+     * @param message The message ie the part after the COMMAND_CHAR
+     * @return
+     */
+    private String handleCommand(String nick, String target, String message) {
+        String outMsg = "PRIVMSG ";
+        outMsg += target + " :"; // Send answer to same channel
+        try {
+            String command = message.split("\\.")[1];
+            outMsg += MessageHandler.command(command); // Finds the appropriate answer
+            System.out.println("Command: " + command);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("No command");
+            outMsg = "";
+        } catch (InvalidCommandException e) {
+            System.out.println("Invalid command");
+            outMsg = "";
+        }
+        return outMsg;
+    }
 
+    /**
+     *
+     * @param nick    The nick of the user to send the message back to
+     * @param message The message ie the CTCP command
+     */
+    private String handleCTCP(String nick, String message) {
+        String ctcp = message.split("\u0001")[1];
+        String outMsg;
+        try {
+            outMsg = "NOTICE ";
+            outMsg += nick + " :" + CTCP_CHAR + MessageHandler.ctcp(ctcp) + CTCP_CHAR;
+        } catch (InvalidCTCPException e) {
+            System.out.println("Invalid CTCP");
+            outMsg = ""; // Clears msg so it doesnt get sent
+        }
+        return outMsg;
+    }
 
     public void run() {
 
