@@ -3,8 +3,6 @@ package sockets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by mabool on 11/24/15.
@@ -19,7 +17,7 @@ public class ReceiverThread extends Thread {
         this.socket = socket;
         this.con = con;
         in = socket.getInputStream();
-        data = new String();
+        data = "";
     }
 
     public void run() {

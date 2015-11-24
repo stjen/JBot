@@ -22,6 +22,7 @@ public class Controller {
             st.start();
             rt.start();
             bot.start();
+            bot.initConnection();
         } catch (IOException e) {
             System.out.printf("Connection not possible");
         }
