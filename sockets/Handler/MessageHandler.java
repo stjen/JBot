@@ -52,10 +52,6 @@ public class MessageHandler {
             case "hello":
                 return "Rude.";
             case "w":
-                c = c.replaceFirst("w","").trim();
-                // Tries to make a proper url from the location string
-                c = c.replace(" ", "_");
-                System.out.println(c);
                 return Weather.getWeather(c);
 
         }

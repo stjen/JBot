@@ -3,6 +3,7 @@ package sockets.Plugins;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sockets.Config;
 import sockets.JSon.JsonReader;
 
 import java.io.IOException;
@@ -14,8 +15,12 @@ public class Weather {
         JSONObject json = null;
         JSONObject c_o;
 
+        /* Format the input string */
+        location = location.replaceFirst("w", "").trim();
+        location = location.replace(" ", "_");
+
         try {
-            json = JsonReader.readJsonFromUrl("http://api.wunderground.com/api/b99e6e565fb38819/conditions/q/" + location + ".json");
+            json = JsonReader.readJsonFromUrl("http://api.wunderground.com/api/" + Config.WUNDERGROUND_API_KEY + "/conditions/q/" + location + ".json");
             c_o = json.getJSONObject("current_observation");
             outMsg += "Weather (" + c_o.getJSONObject("display_location").get("full") + ")";
             outMsg += " - Temp: " + c_o.get("temp_c") + " C (" + c_o.get("temp_f") + " F)";
@@ -31,6 +36,13 @@ public class Weather {
                     JSONArray multiCityChoice = json.getJSONObject("response").getJSONArray("results");
                     for (int i = 0; i < multiCityChoice.length() && i < 10; i++) { // Max 5 results
                         outMsg += multiCityChoice.getJSONObject(i).get("city");
+                        /* State might not exist, so dont add it */
+                        if (!multiCityChoice.getJSONObject(i).get("state").equals(""))
+                            outMsg += " (" + multiCityChoice.getJSONObject(i).get("state") + ")";
+                        outMsg += ", " + multiCityChoice.getJSONObject(i).get("country");
+                        /* Only add - between cities not at the end */
+                        if (i < 10 - 1 && i < multiCityChoice.length() - 1)
+                            outMsg += " - ";
                     }
                     return outMsg;
                 } catch (JSONException e1) {
