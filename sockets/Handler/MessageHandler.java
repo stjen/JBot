@@ -5,6 +5,10 @@ import sockets.Config;
 import sockets.Exceptions.InvalidCTCPException;
 import sockets.Exceptions.InvalidCommandException;
 import sockets.Exceptions.InvalidServerCommandException;
+import sockets.Plugins.Weather;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *  This file is part of Mambutu.
@@ -43,20 +47,34 @@ public class MessageHandler {
     }
 
     public static String command(String c) throws InvalidCommandException {
-        switch (c.toLowerCase()) {
+        String[] incMsg = c.split("\\s+");
+        switch (incMsg[0].toLowerCase()) {
             case "hello":
                 return "Rude.";
             case "w":
-                return "The weather forecast is: Fuck you";
+                c = c.replaceFirst("w","").trim();
+                // Tries to make a proper url from the location string
+                c = c.replace(" ", "_");
+                System.out.println(c);
+                return Weather.getWeather(c);
 
         }
         throw new InvalidCommandException(c);
     }
 
+    // https://tools.ietf.org/html/rfc1459#section-6
     public static String server(String code) throws InvalidServerCommandException {
         switch (code) {
-            case "001":
-                return "";
+            case "001": // We are connected
+                String outMsg = "";
+                // Joins all channels
+                for (int i = 0; i < Config.CHANNELS.split(",").length; i++) {
+                    outMsg += "\nJOIN " + Config.CHANNELS.split(",")[i].trim();
+                }
+                return outMsg;
+            case "433": // ERR_NICKNAMEINUSE
+                return "NICK " + Config.BOT_NICK + ThreadLocalRandom.current().nextInt(0,100);
+
         }
         throw new InvalidServerCommandException(code);
     }

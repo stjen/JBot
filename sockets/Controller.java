@@ -30,7 +30,7 @@ public class Controller {
 
     public Controller() {
         try {
-            socket = new Socket("irc.freenode.org", 6667);
+            socket = new Socket(Config.SERVER_NAME, Config.SERVER_PORT);
             rt = new ReceiverThread(this, socket);
             st = new SenderThread(socket);
             bot = new BotThread(this);

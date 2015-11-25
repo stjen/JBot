@@ -6,21 +6,21 @@ import sockets.Exceptions.InvalidServerCommandException;
 import sockets.Handler.MessageHandler;
 
 /**
- *  This file is part of Mambutu.
- *
- *  Mambutu is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  Mambutu is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Mambutu.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
+ * This file is part of Mambutu.
+ * <p>
+ * Mambutu is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * Mambutu is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with Mambutu.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * Created by mabool on 11/24/15.
  */
 public class BotThread extends Thread {
@@ -39,19 +39,15 @@ public class BotThread extends Thread {
     }
 
     private String serverName = "";
+    private String sessionBotNick = "";
 
 
     /**
      * Takes care of initial connection details, such as setting nick and identifying USER
      */
     public void initConnection() {
-        String outMsg = "NICK " + Config.BOT_NICK;
-        outMsg += "\nUSER " + Config.BOT_USERNAME + " 8 * : " + Config.BOT_REALNAME;
-        // Joins all channels
-        for (int i = 0; i < Config.CHANNELS.split(",").length; i++) {
-            outMsg += "\nJOIN " + Config.CHANNELS.split(",")[i].trim();
-        }
-        outMsg += "\nJOIN #coconuts";
+        String outMsg = "USER " + Config.BOT_USERNAME + " 8 * : " + Config.BOT_REALNAME;
+        outMsg += "\nNICK " + Config.BOT_NICK;
         con.sendMessage(outMsg + "\n");
     }
 
@@ -70,8 +66,9 @@ public class BotThread extends Thread {
         if (incMsg[0].trim().equals("PING")) {
             outMsg = "PONG " + serverName;
         } else if (server.equals(serverName)) {
-            handleServer(what, incMsg);
+            outMsg = handleServer(what, incMsg);
         } else { /** Handles everything else */
+            System.out.println(code);
             switch (code) {
                 case "PRIVMSG":
                     /* Channel message */
@@ -103,6 +100,17 @@ public class BotThread extends Thread {
                     break;
                 case "NOTICE": // Not handling notices for now
                     break;
+                case "MODE":
+                    break;
+                case "KICK":
+                    if (incMsg[3].trim().equals(sessionBotNick)) { // Bot was kicked
+                        if (Config.AUTO_REJOIN_CHANNEL) {
+                            String channel = incMsg[2];
+                            outMsg += "JOIN " + channel;
+                        }
+                        // Rejoin or dont
+                    }
+                    break;
 
             }
         }
@@ -121,7 +129,6 @@ public class BotThread extends Thread {
         } catch (InvalidServerCommandException e) {
             outMsg = "";
         }
-
         return outMsg;
     }
 
