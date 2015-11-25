@@ -10,6 +10,13 @@ import java.io.IOException;
 
 public class Weather {
 
+    /**
+     * TODO:
+     * - Handle city not found gracefully
+     * - Implement getForecast(String location)
+     *
+     */
+
     public static String getWeather(String location) {
         String outMsg = "";
         JSONObject json = null;
@@ -26,8 +33,7 @@ public class Weather {
             outMsg += " - Temp: " + c_o.get("temp_c") + " C (" + c_o.get("temp_f") + " F)";
             outMsg += " - Conditions: " + c_o.get("weather");
             outMsg += " - Humidity: " + c_o.get("relative_humidity");
-            outMsg += " - Wind: " + c_o.get("wind_string") + " (" + c_o.get("wind_kph") + " kph) from " + c_o.get("wind_dir");
-            System.out.println(c_o);
+            outMsg += " - Wind: " + c_o.get("wind_string");
         } catch (JSONException e) {
             /* No specific city found, return multi list of cities  */
             if (e.getMessage().equals("JSONObject[\"current_observation\"] not found.")) {
@@ -47,6 +53,7 @@ public class Weather {
                     return outMsg;
                 } catch (JSONException e1) {
                     System.out.println("Error getting multi city choice");
+                    return outMsg = "Error finding city";
                 }
             }
             outMsg = "";

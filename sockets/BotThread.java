@@ -68,14 +68,14 @@ public class BotThread extends Thread {
         } else if (server.equals(serverName)) {
             outMsg = handleServer(what, incMsg);
         } else { /** Handles everything else */
-            System.out.println(code);
+            //System.out.println(code);
             switch (code) {
                 case "PRIVMSG":
                     /* Channel message */
                     if (incMsg[2].charAt(0) == '#') {
                         String channel = incMsg[2]; // The channel that the message was received in
                         String nick = what.split("!")[0].split(":")[1]; // The nick that sent it
-                        String message = what.split(":")[2]; // The message that was received
+                        String message = what.split(channel + " :", 2)[1]; // The message that was received
                         /* CTCP */
                         if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrounded by '\u0001'
                             outMsg = handleCTCP(nick, message);
