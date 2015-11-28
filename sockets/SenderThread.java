@@ -1,7 +1,9 @@
 package sockets;
 
+import sockets.Exceptions.EmptyCollectionException;
 import util.ArrayQueue.CircularArrayQueue;
 import util.ArrayQueue.QueueADT;
+import util.Log.Log;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,11 +16,13 @@ public class SenderThread extends Thread {
 
     Socket socket;
     BufferedThread buffer;
+    Log log;
 
     public SenderThread(Socket socket) throws IOException {
         this.socket = socket;
         buffer = new BufferedThread(socket);
         buffer.start();
+        log = Log.getInstance();
     }
 
     public void run() {
@@ -28,7 +32,7 @@ public class SenderThread extends Thread {
     public void output(String what) {
 
         System.out.printf("> %s", what);
-
+        log.add(">" + what);
         buffer.addToQueue(what.getBytes());
 
     }
@@ -50,8 +54,12 @@ public class SenderThread extends Thread {
             final long waitTime = 2000;
             while (true) {
                 /* If there is something in the queue, send it */
-                if (sendQueue.first() != null) {
-                    send(sendQueue.dequeue());
+                if (!sendQueue.isEmpty()) {
+                    try {
+                        send(sendQueue.dequeue());
+                    } catch (EmptyCollectionException e) {
+                        System.out.println("Empty queue " + e);
+                    }
                 }
                 try {
                     Thread.sleep(waitTime);

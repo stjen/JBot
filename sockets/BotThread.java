@@ -23,7 +23,7 @@ import sockets.Handler.MessageHandler;
  * <p>
  * Created by mabool on 11/24/15.
  */
-public class BotThread extends Thread {
+public class BotThread {
 
     /**
      * TODO:

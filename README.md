@@ -7,13 +7,11 @@ The goal is to make an easily extendable Java IRC bot, a lá eggdrop, but minus 
 As of now the only thing it can do it stay online, and answer some basic commands. There are no scripting capabilities
 or anything like that.
 
+# TODO
 
+- Reconnect when disconnected
 
-
-
-
-
-
+- Weather: Forecast
 
 
 

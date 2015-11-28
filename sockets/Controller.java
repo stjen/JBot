@@ -36,7 +36,6 @@ public class Controller {
             bot = new BotThread(this);
             st.start();
             rt.start();
-            bot.start();
             bot.initConnection();
         } catch (IOException e) {
             System.out.printf("Connection not possible");

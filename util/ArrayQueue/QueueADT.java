@@ -1,15 +1,15 @@
 package util.ArrayQueue;
 
+import sockets.Exceptions.EmptyCollectionException;
+
 public interface QueueADT<T> {
-    public T dequeue();
+    public T dequeue() throws EmptyCollectionException;
 
     public void enqueue(T element);
 
-    public T first();
+    public T first() throws Exception;
 
     public T last();
-
-    public int indexOf(T element);
 
     public boolean isEmpty();
 

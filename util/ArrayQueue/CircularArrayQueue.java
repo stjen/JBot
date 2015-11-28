@@ -1,52 +1,51 @@
 package util.ArrayQueue;
 
-public class CircularArrayQueue<T> implements QueueADT<T> {
+import sockets.Exceptions.EmptyCollectionException;
 
-    private final static int DEFAULT_CAPACITY = 100;
-    private int rear;
-    private int front;
+public class CircularArrayQueue<T> implements QueueADT<T> {
+    private final int DEFAULT_CAPACITY = 100;
+    private int front, rear, count;
     private T[] queue;
 
     public CircularArrayQueue() {
-        this(DEFAULT_CAPACITY);
+        front = rear = count = 0;
+        queue = (T[]) (new Object[DEFAULT_CAPACITY]);
     }
 
-    @SuppressWarnings("unchecked")
     public CircularArrayQueue(int initialCapacity) {
-        rear = 0;
-        front = 0;
-        queue = (T[]) new Object[initialCapacity];
+        front = rear = count = 0;
+        queue = ((T[]) (new Object[initialCapacity]));
     }
 
-    public void enqueue(T element) throws IllegalArgumentException {
-        if (element == null) {
-            throw new IllegalArgumentException();
-        }
-        if (rear == queue.length) {
+    public void enqueue(T element) {
+        if (size() == queue.length)
             expandCapacity();
-        }
-        // System.out.println("deb");
+
         queue[rear] = element;
-        rear++;
+
+        rear = (rear + 1) % queue.length;
+
+        count++;
     }
 
-    @SuppressWarnings("unchecked")
-    private void expandCapacity() {
-        T[] temp = (T[]) new Object[queue.length * 2];
-        for (int i = 0; i < queue.length; i++) {
-            temp[i] = queue[i];
-        }
-        queue = temp;
+    public T dequeue() throws EmptyCollectionException {
+        if (isEmpty())
+            throw new EmptyCollectionException("queue");
+
+        T result = queue[front];
+        queue[front] = null;
+
+        front = (front + 1) % queue.length;
+
+        count--;
+
+        return result;
     }
 
-    public T dequeue() {
-        //  T temp = queue[rear];
-        //   queue[rear] = null;
-        front++;
-        return queue[front - 1];
-    }
+    public T first() throws EmptyCollectionException {
+        if (isEmpty())
+            throw new EmptyCollectionException("queue");
 
-    public T first() {
         return queue[front];
     }
 
@@ -54,31 +53,41 @@ public class CircularArrayQueue<T> implements QueueADT<T> {
         return queue[rear];
     }
 
-    public int indexOf(T element) {
-        for (int i = 0; i < queue.length; i++) {
-            if (queue[i].equals(element)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public boolean isEmpty() {
-        return rear == 0;
+        return (count == 0);
     }
 
     public int size() {
-        return rear;
+        return count;
     }
 
+
     public String toString() {
-        String msg = "{";
-        for (int i = front; i < rear; i++) {
-            msg += queue[i];
-            if (i < rear - 1) {
-                msg += ",";
+        String result = "";
+        int scan = 0;
+
+        while (scan < count) {
+            if (queue[scan] != null) {
+                result += queue[scan].toString() + "\n";
             }
+            scan++;
         }
-        return msg + "}";
+
+        return result;
+
+    }
+
+    public void expandCapacity() {
+        T[] larger = (T[]) (new Object[queue.length * 2]);
+
+        for (int scan = 0; scan < count; scan++) {
+            larger[scan] = queue[front];
+            front = (front + 1) % queue.length;
+        }
+
+        front = 0;
+        rear = count;
+        queue = larger;
     }
 }
+

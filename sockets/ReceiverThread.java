@@ -1,5 +1,7 @@
 package sockets;
 
+import util.Log.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
@@ -27,12 +29,14 @@ public class ReceiverThread extends Thread {
     InputStream in;
     String data;
     Controller con;
+    Log log;
 
     public ReceiverThread(Controller con, Socket socket) throws IOException {
         this.socket = socket;
         this.con = con;
         in = socket.getInputStream();
         data = "";
+        log = Log.getInstance();
     }
 
     public void run() {
@@ -47,6 +51,7 @@ public class ReceiverThread extends Thread {
                 if (!data.substring(0).equals("\n")) { // Don't pass on an empty string
                     System.out.printf("< %s", data);
                     con.newInput(data);
+                    log.add("<" + data);
                 }
                 data = new String();
             }
