@@ -23,7 +23,7 @@ import sockets.Handler.MessageHandler;
  * <p>
  * Created by mabool on 11/24/15.
  */
-public class BotThread {
+public class Bot {
 
     /**
      * TODO:
@@ -34,7 +34,7 @@ public class BotThread {
 
     private Controller con;
 
-    public BotThread(Controller con) {
+    public Bot(Controller con) {
         this.con = con;
     }
 

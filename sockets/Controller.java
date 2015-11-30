@@ -25,7 +25,7 @@ public class Controller {
     Socket socket;
     ReceiverThread rt;
     SenderThread st;
-    BotThread bot;
+    Bot bot;
 
 
     public Controller() {
@@ -33,7 +33,7 @@ public class Controller {
             socket = new Socket(Config.SERVER_NAME, Config.SERVER_PORT);
             rt = new ReceiverThread(this, socket);
             st = new SenderThread(socket);
-            bot = new BotThread(this);
+            bot = new Bot(this);
             st.start();
             rt.start();
             bot.initConnection();

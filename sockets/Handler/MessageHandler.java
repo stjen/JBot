@@ -1,13 +1,12 @@
 package sockets.Handler;
 
-import sockets.BotThread;
+import sockets.Bot;
 import sockets.Config;
 import sockets.Exceptions.InvalidCTCPException;
 import sockets.Exceptions.InvalidCommandException;
 import sockets.Exceptions.InvalidServerCommandException;
 import sockets.Plugins.Weather;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -30,10 +29,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class MessageHandler {
 
-    BotThread bot;
+    Bot bot;
 
     
-    public MessageHandler(BotThread bot) {
+    public MessageHandler(Bot bot) {
         this.bot = bot;
     }
 
