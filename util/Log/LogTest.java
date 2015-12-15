@@ -18,5 +18,5 @@ public class LogTest {
             System.out.println(s.pop());
         }
     }
-    
+
 }

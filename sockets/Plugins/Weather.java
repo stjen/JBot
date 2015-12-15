@@ -14,7 +14,6 @@ public class Weather {
      * TODO:
      * - Handle city not found gracefully
      * - Implement getForecast(String location)
-     *
      */
 
     public static String getWeather(String location) {
