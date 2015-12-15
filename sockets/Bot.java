@@ -88,7 +88,7 @@ public class Bot {
                         /* Private message */
                         String nick = what.split("!")[0].split(":")[1]; // The nick that sent it
                         String message = what.split(":")[2]; // The message that was received
-                        if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrounded by '\u0001'
+                        if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrolunded by '\u0001'
                             outMsg = handleCTCP(nick, message);
                         }
                         /* Commands */
@@ -145,7 +145,7 @@ public class Bot {
             String command = message.split("\\" + Character.toString(Config.COMMAND_CHAR))[1];
             if (Config.APPEND_NICK_CMD)
                 outMsg += nick + ": ";
-            outMsg += MessageHandler.command(command); // Finds the appropriate answer
+            outMsg += MessageHandler.command(nick, target, command); // Finds the appropriate answer
             System.out.println("Command: " + command);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No command");

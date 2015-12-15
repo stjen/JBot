@@ -6,6 +6,8 @@ import sockets.Exceptions.InvalidCTCPException;
 import sockets.Exceptions.InvalidCommandException;
 import sockets.Exceptions.InvalidServerCommandException;
 import sockets.Plugins.Weather;
+import util.Log.FileLog;
+import util.Log.Log;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -45,14 +47,17 @@ public class MessageHandler {
         throw new InvalidCTCPException(c);
     }
 
-    public static String command(String c) throws InvalidCommandException {
+    public static String command(String nick, String target, String c) throws InvalidCommandException {
         String[] incMsg = c.split("\\s+");
         switch (incMsg[0].toLowerCase()) {
             case "hello":
                 return "Rude.";
             case "w":
                 return Weather.getWeather(c);
-
+            case "bug":
+                Log.getInstance().add(c);
+                FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + "@" + target + ": " + c);
+                return "Added \"" + c + "\" to the bug log";
         }
         throw new InvalidCommandException(c);
     }
