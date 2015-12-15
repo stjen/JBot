@@ -1,10 +1,7 @@
 package Tests;
 
-import sockets.Config;
-import sockets.Controller;
-import sockets.Exceptions.EmptyCollectionException;
-import util.ArrayQueue.CircularArrayQueue;
-import util.ArrayQueue.QueueADT;
+import mambutu.Config;
+import mambutu.Exceptions.EmptyCollectionException;
 
 /**
  * This file is part of Jbot.

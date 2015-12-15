@@ -1,4 +1,4 @@
-package sockets;
+package mambutu.Exceptions;
 
 /**
  * This file is part of Mambutu.
@@ -18,9 +18,8 @@ package sockets;
  * <p/>
  * Created by mabool on 11/24/15.
  */
-public class Main {
-    public static void main(String[] args) {
-        Controller c = new Controller();
-
+public class InvalidServerCommandException extends Exception {
+    public InvalidServerCommandException(String msg) {
+        super(msg);
     }
 }

@@ -1,4 +1,4 @@
-package sockets;
+package mambutu;
 
 import util.Log.Log;
 

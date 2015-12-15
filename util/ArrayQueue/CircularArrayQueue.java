@@ -1,6 +1,6 @@
 package util.ArrayQueue;
 
-import sockets.Exceptions.EmptyCollectionException;
+import mambutu.Exceptions.EmptyCollectionException;
 
 public class CircularArrayQueue<T> implements QueueADT<T> {
     private final int DEFAULT_CAPACITY = 100;

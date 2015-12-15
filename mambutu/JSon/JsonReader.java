@@ -1,4 +1,4 @@
-package sockets.JSon;
+package mambutu.JSon;
 
 import org.json.JSONException;
 import org.json.JSONObject;

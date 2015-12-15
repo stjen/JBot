@@ -1,4 +1,4 @@
-package sockets.Exceptions;
+package mambutu.Exceptions;
 
 /**
  * This file is part of Mambutu.
@@ -15,11 +15,10 @@ package sockets.Exceptions;
  * You should have received a copy of the GNU General Public License
  * along with Mambutu.  If not, see <http://www.gnu.org/licenses/>.
  * <p/>
- * <p/>
  * Created by mabool on 11/24/15.
  */
-public class InvalidServerCommandException extends Exception {
-    public InvalidServerCommandException(String msg) {
+public class EmptyCollectionException extends Exception {
+    public EmptyCollectionException(String msg) {
         super(msg);
     }
 }

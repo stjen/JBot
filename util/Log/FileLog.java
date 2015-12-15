@@ -1,7 +1,5 @@
 package util.Log;
 
-import sockets.Config;
-
 import java.io.*;
 
 /**

@@ -1,10 +1,7 @@
 package Tests;
 
-import sockets.Config;
+import mambutu.Config;
 import util.Log.FileLog;
-
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by stefan on 12/15/15.

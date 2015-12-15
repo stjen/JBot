@@ -1,4 +1,4 @@
-package sockets;
+package mambutu;
 
 import java.io.IOException;
 import java.net.Socket;

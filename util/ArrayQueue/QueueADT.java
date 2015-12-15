@@ -1,6 +1,6 @@
 package util.ArrayQueue;
 
-import sockets.Exceptions.EmptyCollectionException;
+import mambutu.Exceptions.EmptyCollectionException;
 
 public interface QueueADT<T> {
     public T dequeue() throws EmptyCollectionException;

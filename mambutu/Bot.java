@@ -1,9 +1,9 @@
-package sockets;
+package mambutu;
 
-import sockets.Exceptions.InvalidCTCPException;
-import sockets.Exceptions.InvalidCommandException;
-import sockets.Exceptions.InvalidServerCommandException;
-import sockets.Handler.MessageHandler;
+import mambutu.Exceptions.InvalidCTCPException;
+import mambutu.Exceptions.InvalidCommandException;
+import mambutu.Exceptions.InvalidServerCommandException;
+import mambutu.Handler.MessageHandler;
 
 /**
  * This file is part of Mambutu.

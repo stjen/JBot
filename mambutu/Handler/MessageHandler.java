@@ -1,11 +1,11 @@
-package sockets.Handler;
+package mambutu.Handler;
 
-import sockets.Bot;
-import sockets.Config;
-import sockets.Exceptions.InvalidCTCPException;
-import sockets.Exceptions.InvalidCommandException;
-import sockets.Exceptions.InvalidServerCommandException;
-import sockets.Plugins.Weather;
+import mambutu.Bot;
+import mambutu.Config;
+import mambutu.Exceptions.InvalidCTCPException;
+import mambutu.Exceptions.InvalidCommandException;
+import mambutu.Exceptions.InvalidServerCommandException;
+import mambutu.Plugins.Weather;
 import util.Log.FileLog;
 import util.Log.Log;
 
@@ -49,15 +49,24 @@ public class MessageHandler {
 
     public static String command(String nick, String target, String c) throws InvalidCommandException {
         String[] incMsg = c.split("\\s+");
+        String location;
         switch (incMsg[0].toLowerCase()) {
             case "hello":
                 return "Rude.";
             case "w":
+                location = c;
+                location = location.replaceFirst("w", "").trim();
                 return Weather.getWeather(c);
+            case "fc":
+                /* Format the input string */
+                location = c;
+                location = location.replaceFirst("fc", "").trim();
+                return Weather.getForecast(location);
             case "bug":
                 Log.getInstance().add(c);
                 FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + "@" + target + ": " + c);
                 return "Added \"" + c + "\" to the bug log";
+
         }
         throw new InvalidCommandException(c);
     }

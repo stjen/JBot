@@ -1,10 +1,10 @@
-package sockets.Plugins;
+package mambutu.Plugins;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sockets.Config;
-import sockets.JSon.JsonReader;
+import mambutu.Config;
+import mambutu.JSon.JsonReader;
 
 import java.io.IOException;
 
@@ -21,9 +21,10 @@ public class Weather {
         JSONObject json = null;
         JSONObject c_o;
 
-        /* Format the input string */
-        location = location.replaceFirst("w", "").trim();
+
+        // Format input string
         location = location.replace(" ", "_");
+
 
         try {
             json = JsonReader.readJsonFromUrl("http://api.wunderground.com/api/" + Config.WUNDERGROUND_API_KEY + "/conditions/q/" + location + ".json");
@@ -63,8 +64,43 @@ public class Weather {
         return outMsg;
     }
 
+    public static String getForecast(String location) {
+        String outMsg = "";
+        JSONObject json = null;
+        JSONObject c_o;
+
+        // Format input string
+        location = location.replace(" ", "_");
+
+        try {
+            json = JsonReader.readJsonFromUrl("http://api.wunderground.com/api/" + Config.WUNDERGROUND_API_KEY + "/forecast/q/" + location + ".json");
+            JSONArray forecast = json.getJSONObject("forecast").getJSONObject("txt_forecast").getJSONArray("forecastday");
+            System.out.println(forecast);
+            System.out.println(location);
+            for (int i = 0; i < forecast.length() && i < 4; i++) { // Max 5 results
+                outMsg += forecast.getJSONObject(i).get("title");
+                        /* State might not exist, so dont add it */
+                outMsg += ", " + forecast.getJSONObject(i).get("fcttext_metric");
+                        /* Only add - between cities not at the end */
+                if (i < 4 - 1 && i < forecast.length() - 1)
+                    outMsg += " - ";
+            }
+        } catch (JSONException e) {
+            /* No specific city found, return multi list of cities  */
+            if (e.getMessage().equals("JSONObject[\"forecast\"] not found.")) {
+                outMsg += "Multiple choices: ";
+                return "No such city";
+            }
+            outMsg = "";
+        } catch (IOException e) {
+            System.out.println("Error loading from URL http://api.wunderground.com/api/b99e6e565fb38819/conditions/q/" + location + ".json");
+            outMsg = "";
+        }
+        return outMsg;
+    }
+
     public static void main(String[] args) {
-        System.out.println(getWeather("New_York"));
+        System.out.println(getForecast("horsens"));
     }
 
 }

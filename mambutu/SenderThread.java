@@ -1,6 +1,6 @@
-package sockets;
+package mambutu;
 
-import sockets.Exceptions.EmptyCollectionException;
+import mambutu.Exceptions.EmptyCollectionException;
 import util.ArrayQueue.CircularArrayQueue;
 import util.ArrayQueue.QueueADT;
 import util.Log.Log;
