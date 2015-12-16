@@ -3,26 +3,26 @@ package mambutu.Handler;
 /**
  * Created by stefan on 12/16/15.
  */
-public abstract class FooHandler implements Handler {
+public class FooHandler implements Handler {
 
-    public final String handles = "foo";
+    private String handles = "foo";
+    private MessageDistributor messageDistributor;
 
-    /**
-     * Should return true if the handler can handle that command
-     *
-     * @param command
-     * @return
-     */
-    public boolean handles(String command) {
-        String[] arrayHandles = handles.split(",");
-        for (int i = 0; i < arrayHandles.length; i++) {
-            if (arrayHandles[i].equals(command))
-                return true;
-        }
-        return false;
+    public FooHandler(MessageDistributor messageDistributor) {
+        this.messageDistributor = messageDistributor;
+        messageDistributor.registerCommandHandler(this);
     }
 
 
+    @Override
+    public String handles() {
+        return handles;
+    }
+
+    @Override
+    public String handle(String command) {
+        return "Got ya";
+    }
 
 
 }

@@ -33,14 +33,19 @@ public class Bot {
     public static final char CTCP_CHAR = '\u0001';
 
     private Controller con;
+    private MessageDistributor messageDistributor;
 
     public Bot(Controller con) {
         this.con = con;
+        messageDistributor = new MessageDistributor(this);
     }
 
     private String serverName = "";
     private String sessionBotNick = "";
 
+    public MessageDistributor getMessageDistributor() {
+        return messageDistributor;
+    }
 
     /**
      * Takes care of initial connection details, such as setting nick and identifying USER
@@ -125,7 +130,7 @@ public class Bot {
         String outMsg;
         String code = incMsg[1].trim();
         try {
-            outMsg = MessageDistributor.server(code);
+            outMsg = messageDistributor.server(code);
         } catch (InvalidServerCommandException e) {
             outMsg = "";
         }
@@ -145,7 +150,7 @@ public class Bot {
             String command = message.split("\\" + Character.toString(Config.COMMAND_CHAR))[1];
             if (Config.APPEND_NICK_CMD)
                 outMsg += nick + ": ";
-            outMsg += MessageDistributor.command(nick, target, command); // Finds the appropriate answer
+            outMsg += messageDistributor.command(nick, target, command); // Finds the appropriate answer
             System.out.println("Command: " + command);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No command");

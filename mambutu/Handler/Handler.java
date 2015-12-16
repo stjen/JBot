@@ -5,11 +5,10 @@ package mambutu.Handler;
  */
 public interface Handler {
     /**
-     * Should return true if the handler can handle that command
-     * @param command
+     * Should return all the commands handled by the handler, in comma seperated format
      * @return
      */
-    public boolean handles(String command);
+    public String handles();
 
     /**
      * Handles that specific command

@@ -9,6 +9,7 @@ import mambutu.Plugins.Weather;
 import util.Log.FileLog;
 import util.Log.Log;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -35,9 +36,28 @@ public class MessageDistributor {
 
     Bot bot;
 
+    private ArrayList<Handler> CTCPHandlers;
+    private ArrayList<Handler> CommandHandlers;
+    private ArrayList<Handler> MessageHandlers;
+
 
     public MessageDistributor(Bot bot) {
+        CTCPHandlers = new ArrayList<>();
+        CommandHandlers = new ArrayList<>();
+        MessageHandlers = new ArrayList<>();
         this.bot = bot;
+    }
+
+    public void registerCTCPHandler(Handler theHandler) {
+        CTCPHandlers.add(theHandler);
+    }
+
+    public void registerCommandHandler(Handler theHandler) {
+        CommandHandlers.add(theHandler);
+    }
+
+    public void registerMessageHandler(Handler theHandler) {
+        MessageHandlers.add(theHandler);
     }
 
     public static String ctcp(String c) throws InvalidCTCPException {
@@ -49,7 +69,7 @@ public class MessageDistributor {
         throw new InvalidCTCPException(c);
     }
 
-    public static String command(String nick, String target, String c) throws InvalidCommandException {
+    public String command(String nick, String target, String c) throws InvalidCommandException {
         String[] incMsg = c.split("\\s+");
         String location;
         switch (incMsg[0].toLowerCase()) {
@@ -79,7 +99,7 @@ public class MessageDistributor {
 
     // https://tools.ietf.org/html/rfc1459#section-6
 
-    public static String server(String code) throws InvalidServerCommandException {
+    public String server(String code) throws InvalidServerCommandException {
         switch (code) {
             case "001": // We are connected
                 String outMsg = "";
@@ -95,8 +115,8 @@ public class MessageDistributor {
         throw new InvalidServerCommandException(code);
     }
 
-    public boolean handles(String command) {
-        String[] arrayHandles = handles.split(",");
+    public boolean handles(Handler h, String command) {
+        String[] arrayHandles = h.handles().split(",");
         for (int i = 0; i < arrayHandles.length; i++) {
             if (arrayHandles[i].equals(command))
                 return true;
