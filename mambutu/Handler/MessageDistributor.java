@@ -33,7 +33,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MessageDistributor {
 
 
-
     Bot bot;
 
     private ArrayList<Handler> CTCPHandlers;
@@ -70,8 +69,22 @@ public class MessageDistributor {
     }
 
     public String command(String nick, String target, String c) throws InvalidCommandException {
-        String[] incMsg = c.split("\\s+");
-        String location;
+        String[] command = c.split("\\s+");
+
+        /* Loop through all the registered command handlers, for each of them loop through all the commands
+         they are able to handle, and see if they match the command in question
+         If they do, call their handle(..) method */
+        System.out.println(command[0]);
+        for (int i = 0; i < CommandHandlers.size(); i++) {
+            String[] currentHandlesCmds = CommandHandlers.get(i).handles().split(",");
+            System.out.println(currentHandlesCmds.toString());
+            for (int j = 0; j < currentHandlesCmds.length; j++) {
+                if (currentHandlesCmds[j].trim().equals(command[0].trim()))
+                    return CommandHandlers.get(i).handle(command[0].trim());
+            }
+        }
+
+     /*   String location;
         switch (incMsg[0].toLowerCase()) {
             case "hello":
                 return "Rude.";
@@ -79,7 +92,7 @@ public class MessageDistributor {
                 location = c.replaceFirst("w", "").trim();
                 return Weather.getWeather(location);
             case "fc":
-                /* Format the input string */
+                 Format the input string
                 location = c.replaceFirst("fc", "").trim();
                 return Weather.getForecast(location);
             case "bug":
@@ -93,7 +106,7 @@ public class MessageDistributor {
                     return "Added \"" + c + "\" to the bug log";
                 }
                 return "";
-        }
+        }*/
         throw new InvalidCommandException(c);
     }
 
@@ -123,7 +136,6 @@ public class MessageDistributor {
         }
         return false;
     }
-
 
 
 }

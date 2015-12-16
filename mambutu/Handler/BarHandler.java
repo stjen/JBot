@@ -3,12 +3,12 @@ package mambutu.Handler;
 /**
  * Created by stefan on 12/16/15.
  */
-public class FooHandler implements Handler {
+public class BarHandler implements Handler {
 
-    private String handles = "foo";
+    private String handles = "bar, baz, foo";
     private MessageDistributor messageDistributor;
 
-    public FooHandler(MessageDistributor messageDistributor) {
+    public BarHandler(MessageDistributor messageDistributor) {
         this.messageDistributor = messageDistributor;
         messageDistributor.registerCommandHandler(this);
     }
@@ -22,7 +22,7 @@ public class FooHandler implements Handler {
     @Override
     public String handle(String command) {
         System.out.println("We be handlin\'");
-        return "Got ya";
+        return "got dat heavy " + command;
     }
 
 
