@@ -32,6 +32,9 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class MessageDistributor {
 
+    /**
+     * TODO: Special handlers for connection stuff like PING/PONG, authentication to nickserv etc
+     */
 
     Bot bot;
 
@@ -80,9 +83,11 @@ public class MessageDistributor {
             System.out.println(currentHandlesCmds.toString());
             for (int j = 0; j < currentHandlesCmds.length; j++) {
                 if (currentHandlesCmds[j].trim().equals(command[0].trim()))
-                    return CommandHandlers.get(i).handle(command[0].trim());
+                    return CommandHandlers.get(i).handle(c);
             }
         }
+        // TODO: Convert weather/bug to the new handler system
+
 
      /*   String location;
         switch (incMsg[0].toLowerCase()) {

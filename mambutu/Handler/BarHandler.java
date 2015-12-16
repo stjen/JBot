@@ -21,8 +21,10 @@ public class BarHandler implements Handler {
 
     @Override
     public String handle(String command) {
+        String[] commandArr = command.split("\\s+");
+
         System.out.println("We be handlin\'");
-        return "got dat heavy " + command;
+        return "got dat heavy " + commandArr[0];
     }
 
 

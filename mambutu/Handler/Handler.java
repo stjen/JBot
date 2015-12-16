@@ -12,7 +12,7 @@ public interface Handler {
 
     /**
      * Handles that specific command
-     * @param command
+     * @param command the unformatted command string, with the first word being the .command it was called with
      * @return the output from the command, can be an empty string if no output
      */
     public String handle(String command);

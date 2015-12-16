@@ -21,6 +21,7 @@ public class FooHandler implements Handler {
 
     @Override
     public String handle(String command) {
+        String[] commandArr = command.split("\\s+");
         System.out.println("We be handlin\'");
         return "Got ya";
     }
