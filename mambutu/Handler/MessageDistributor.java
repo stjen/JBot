@@ -29,12 +29,14 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p/>
  * Created by mabool on 11/24/15.
  */
-public class MessageHandler {
+public class MessageDistributor {
+
+
 
     Bot bot;
 
 
-    public MessageHandler(Bot bot) {
+    public MessageDistributor(Bot bot) {
         this.bot = bot;
     }
 
@@ -61,15 +63,22 @@ public class MessageHandler {
                 location = c.replaceFirst("fc", "").trim();
                 return Weather.getForecast(location);
             case "bug":
-                Log.getInstance().add(c);
-                FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + "@" + target + ": " + c);
-                return "Added \"" + c + "\" to the bug log";
-
+                if (Config.BUG_LOG_ENABLED) {
+                    Log.getInstance().add(c);
+                    c = c.replaceFirst("bug", "").trim();
+                    if (c.equals("")) { // the remainder is an empty string
+                        return "The bug log can be found at: " + Config.BUG_LOG_FILE_URL;
+                    }
+                    FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + "@" + target + ": " + c);
+                    return "Added \"" + c + "\" to the bug log";
+                }
+                return "";
         }
         throw new InvalidCommandException(c);
     }
 
     // https://tools.ietf.org/html/rfc1459#section-6
+
     public static String server(String code) throws InvalidServerCommandException {
         switch (code) {
             case "001": // We are connected
@@ -85,5 +94,16 @@ public class MessageHandler {
         }
         throw new InvalidServerCommandException(code);
     }
+
+    public boolean handles(String command) {
+        String[] arrayHandles = handles.split(",");
+        for (int i = 0; i < arrayHandles.length; i++) {
+            if (arrayHandles[i].equals(command))
+                return true;
+        }
+        return false;
+    }
+
+
 
 }

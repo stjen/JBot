@@ -3,7 +3,7 @@ package mambutu;
 import mambutu.Exceptions.InvalidCTCPException;
 import mambutu.Exceptions.InvalidCommandException;
 import mambutu.Exceptions.InvalidServerCommandException;
-import mambutu.Handler.MessageHandler;
+import mambutu.Handler.MessageDistributor;
 
 /**
  * This file is part of Mambutu.
@@ -125,7 +125,7 @@ public class Bot {
         String outMsg;
         String code = incMsg[1].trim();
         try {
-            outMsg = MessageHandler.server(code);
+            outMsg = MessageDistributor.server(code);
         } catch (InvalidServerCommandException e) {
             outMsg = "";
         }
@@ -145,7 +145,7 @@ public class Bot {
             String command = message.split("\\" + Character.toString(Config.COMMAND_CHAR))[1];
             if (Config.APPEND_NICK_CMD)
                 outMsg += nick + ": ";
-            outMsg += MessageHandler.command(nick, target, command); // Finds the appropriate answer
+            outMsg += MessageDistributor.command(nick, target, command); // Finds the appropriate answer
             System.out.println("Command: " + command);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No command");
@@ -166,7 +166,7 @@ public class Bot {
         String outMsg;
         try {
             outMsg = "NOTICE ";
-            outMsg += nick + " :" + CTCP_CHAR + MessageHandler.ctcp(ctcp) + CTCP_CHAR;
+            outMsg += nick + " :" + CTCP_CHAR + MessageDistributor.ctcp(ctcp) + CTCP_CHAR;
         } catch (InvalidCTCPException e) {
             System.out.println("Invalid CTCP");
             outMsg = ""; // Clears msg so it doesnt get sent
