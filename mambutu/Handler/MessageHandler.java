@@ -54,13 +54,11 @@ public class MessageHandler {
             case "hello":
                 return "Rude.";
             case "w":
-                location = c;
-                location = location.replaceFirst("w", "").trim();
-                return Weather.getWeather(c);
+                location = c.replaceFirst("w", "").trim();
+                return Weather.getWeather(location);
             case "fc":
                 /* Format the input string */
-                location = c;
-                location = location.replaceFirst("fc", "").trim();
+                location = c.replaceFirst("fc", "").trim();
                 return Weather.getForecast(location);
             case "bug":
                 Log.getInstance().add(c);

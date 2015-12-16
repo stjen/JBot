@@ -13,7 +13,6 @@ public class Weather {
     /**
      * TODO:
      * - Handle city not found gracefully
-     * - Implement getForecast(String location)
      */
 
     public static String getWeather(String location) {
@@ -24,6 +23,7 @@ public class Weather {
 
         // Format input string
         location = location.replace(" ", "_");
+        System.out.println(location);
 
 
         try {
@@ -58,7 +58,7 @@ public class Weather {
             }
             outMsg = "";
         } catch (IOException e) {
-            System.out.println("Error loading from URL http://api.wunderground.com/api/b99e6e565fb38819/conditions/q/" + location + ".json");
+            System.out.println("Error loading from URL http://api.wunderground.com/api/" + Config.WUNDERGROUND_API_KEY + "/conditions/q/" + location + ".json");
             outMsg = "";
         }
         return outMsg;
@@ -93,14 +93,9 @@ public class Weather {
             }
             outMsg = "";
         } catch (IOException e) {
-            System.out.println("Error loading from URL http://api.wunderground.com/api/b99e6e565fb38819/conditions/q/" + location + ".json");
+            System.out.println("Error loading from URL http://api.wunderground.com/api/" + Config.WUNDERGROUND_API_KEY + "/forecast/q/" + location + ".json");
             outMsg = "";
         }
         return outMsg;
     }
-
-    public static void main(String[] args) {
-        System.out.println(getForecast("horsens"));
-    }
-
 }
