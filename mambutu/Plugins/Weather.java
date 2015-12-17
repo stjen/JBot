@@ -1,5 +1,7 @@
 package mambutu.Plugins;
 
+import mambutu.Handler.Handler;
+import mambutu.Handler.MessageDistributor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +10,11 @@ import mambutu.JSon.JsonReader;
 
 import java.io.IOException;
 
-public class Weather {
+public class Weather extends Handler {
+
+    public Weather(String handles, MessageDistributor messageDistributor) {
+        super(handles, messageDistributor);
+    }
 
     /**
      * TODO:

@@ -1,7 +1,6 @@
 package mambutu;
 
 import mambutu.Handler.BarHandler;
-import mambutu.Handler.FooHandler;
 import mambutu.Handler.MessageDistributor;
 
 /**
@@ -27,6 +26,5 @@ public class Main {
         Controller c = new Controller();
         MessageDistributor messageDistributor = c.getBot().getMessageDistributor();
         new BarHandler(messageDistributor);
-        new FooHandler(messageDistributor);
     }
 }

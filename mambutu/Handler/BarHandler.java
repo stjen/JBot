@@ -3,29 +3,34 @@ package mambutu.Handler;
 /**
  * Created by stefan on 12/16/15.
  */
-public class BarHandler implements Handler {
+public class BarHandler extends Handler {
 
-    private String handles = "bar, baz, foo";
-    private MessageDistributor messageDistributor;
+    /**
+     * Sample handler file
+     * For each entry in the variable "handles", there must be a corresponding method, with the signature:
+     * public String entry(String args, String nick)
+     * -- Note --
+     */
+
+    // Static because it is accessed before the handler is instanciated and it must be used for the superconstructor
+    private static String handles = "bar, baz, foo";
 
     public BarHandler(MessageDistributor messageDistributor) {
-        this.messageDistributor = messageDistributor;
-        messageDistributor.registerCommandHandler(this);
+        super(handles, messageDistributor);
+        messageDistributor.registerCommandHandler(this); // This is a COMMAND handler
     }
 
-
-    @Override
-    public String handles() {
-        return handles;
+    public String baz(String args, String nick) {
+        System.out.println("In baz!");
+        return "baz: nick: " + nick + " args: " + args;
     }
 
-    @Override
-    public String handle(String command) {
-        String[] commandArr = command.split("\\s+");
-
-        System.out.println("We be handlin\'");
-        return "got dat heavy " + commandArr[0];
+    public String foo(String args, String nick) {
+        return "foo: nick: " + nick + " args: " + args;
     }
 
+    public String bar(String args, String nick) {
+        return "bar: nick: " + nick + " args: " + args;
+    }
 
 }

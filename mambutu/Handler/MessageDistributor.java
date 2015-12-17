@@ -5,9 +5,6 @@ import mambutu.Config;
 import mambutu.Exceptions.InvalidCTCPException;
 import mambutu.Exceptions.InvalidCommandException;
 import mambutu.Exceptions.InvalidServerCommandException;
-import mambutu.Plugins.Weather;
-import util.Log.FileLog;
-import util.Log.Log;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
@@ -62,6 +59,13 @@ public class MessageDistributor {
         MessageHandlers.add(theHandler);
     }
 
+    // Removes the handler from any list
+    public void unregisterHandler(Handler theHandler) {
+        CTCPHandlers.remove(theHandler);
+        CommandHandlers.remove(theHandler);
+        MessageHandlers.remove(theHandler);
+    }
+
     public static String ctcp(String c) throws InvalidCTCPException {
         String preText = c.toUpperCase() + " ";
         switch (c.toLowerCase()) {
@@ -73,18 +77,15 @@ public class MessageDistributor {
 
     public String command(String nick, String target, String c) throws InvalidCommandException {
         String[] command = c.split("\\s+");
+        String arg = c.replace(command[0], ""); // Removes the command from the string
 
         /* Loop through all the registered command handlers, for each of them loop through all the commands
          they are able to handle, and see if they match the command in question
          If they do, call their handle(..) method */
         System.out.println(command[0]);
         for (int i = 0; i < CommandHandlers.size(); i++) {
-            String[] currentHandlesCmds = CommandHandlers.get(i).handles().split(",");
-            System.out.println(currentHandlesCmds.toString());
-            for (int j = 0; j < currentHandlesCmds.length; j++) {
-                if (currentHandlesCmds[j].trim().equals(command[0].trim()))
-                    return CommandHandlers.get(i).handle(c);
-            }
+            if (CommandHandlers.get(i).handles(command[0]))
+                return CommandHandlers.get(i).handle(command[0], arg, nick);
         }
         // TODO: Convert weather/bug to the new handler system
 
@@ -131,15 +132,6 @@ public class MessageDistributor {
 
         }
         throw new InvalidServerCommandException(code);
-    }
-
-    public boolean handles(Handler h, String command) {
-        String[] arrayHandles = h.handles().split(",");
-        for (int i = 0; i < arrayHandles.length; i++) {
-            if (arrayHandles[i].equals(command))
-                return true;
-        }
-        return false;
     }
 
 
