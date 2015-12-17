@@ -82,37 +82,10 @@ public class MessageDistributor {
         /* Loop through all the registered command handlers, for each of them loop through all the commands
          they are able to handle, and see if they match the command in question
          If they do, call their handle(..) method */
-        System.out.println(command[0]);
         for (int i = 0; i < CommandHandlers.size(); i++) {
             if (CommandHandlers.get(i).handles(command[0]))
                 return CommandHandlers.get(i).handle(command[0], arg, nick);
         }
-        // TODO: Convert weather/bug to the new handler system
-
-
-     /*   String location;
-        switch (incMsg[0].toLowerCase()) {
-            case "hello":
-                return "Rude.";
-            case "w":
-                location = c.replaceFirst("w", "").trim();
-                return Weather.getWeather(location);
-            case "fc":
-                 Format the input string
-                location = c.replaceFirst("fc", "").trim();
-                return Weather.getForecast(location);
-            case "bug":
-                if (Config.BUG_LOG_ENABLED) {
-                    Log.getInstance().add(c);
-                    c = c.replaceFirst("bug", "").trim();
-                    if (c.equals("")) { // the remainder is an empty string
-                        return "The bug log can be found at: " + Config.BUG_LOG_FILE_URL;
-                    }
-                    FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + "@" + target + ": " + c);
-                    return "Added \"" + c + "\" to the bug log";
-                }
-                return "";
-        }*/
         throw new InvalidCommandException(c);
     }
 

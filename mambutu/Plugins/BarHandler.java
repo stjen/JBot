@@ -1,4 +1,7 @@
-package mambutu.Handler;
+package mambutu.Plugins;
+
+import mambutu.Handler.Handler;
+import mambutu.Handler.MessageDistributor;
 
 /**
  * Created by stefan on 12/16/15.

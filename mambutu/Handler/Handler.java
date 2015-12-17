@@ -9,6 +9,7 @@ public abstract class Handler {
     /**
      * TODO: Check on startup that all handler methods in the child exists, if not, disable that handler,
      * + ie unregister it in the messagedistributor
+     * TODO: Allow aliases for commands in some way
      */
 
     String handles;

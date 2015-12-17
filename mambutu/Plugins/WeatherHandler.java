@@ -10,10 +10,13 @@ import mambutu.JSon.JsonReader;
 
 import java.io.IOException;
 
-public class Weather extends Handler {
+public class WeatherHandler extends Handler {
 
-    public Weather(String handles, MessageDistributor messageDistributor) {
+    private static String handles = "fc, w";
+
+    public WeatherHandler(MessageDistributor messageDistributor) {
         super(handles, messageDistributor);
+        messageDistributor.registerCommandHandler(this);
     }
 
     /**
@@ -21,7 +24,16 @@ public class Weather extends Handler {
      * - Handle city not found gracefully
      */
 
-    public static String getWeather(String location) {
+
+    public String w(String location, String nick) {
+        return getWeather(location, nick);
+    }
+
+    public String fc(String location, String nick) {
+        return getForecast(location, nick);
+    }
+
+    private String getWeather(String location, String nick) {
         String outMsg = "";
         JSONObject json = null;
         JSONObject c_o;
@@ -70,7 +82,7 @@ public class Weather extends Handler {
         return outMsg;
     }
 
-    public static String getForecast(String location) {
+    private String getForecast(String location, String nick) {
         String outMsg = "";
         JSONObject json = null;
         JSONObject c_o;
