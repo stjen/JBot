@@ -35,6 +35,8 @@ public class MessageDistributor {
 
     Bot bot;
 
+
+    private ArrayList<Handler> ServerHandlers;
     private ArrayList<Handler> CTCPHandlers;
     private ArrayList<Handler> CommandHandlers;
     private ArrayList<Handler> MessageHandlers;
@@ -44,11 +46,16 @@ public class MessageDistributor {
         CTCPHandlers = new ArrayList<>();
         CommandHandlers = new ArrayList<>();
         MessageHandlers = new ArrayList<>();
+        ServerHandlers = new ArrayList<>();
         this.bot = bot;
     }
 
     public void registerCTCPHandler(Handler theHandler) {
         CTCPHandlers.add(theHandler);
+    }
+
+    public void registerServerHandler(Handler theHandler) {
+        ServerHandlers.add(theHandler);
     }
 
     public void registerCommandHandler(Handler theHandler) {
