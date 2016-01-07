@@ -27,6 +27,9 @@ public class Controller {
     SenderThread st;
     Bot bot;
 
+    public Bot getBot() {
+        return bot;
+    }
 
     public Controller() {
         try {

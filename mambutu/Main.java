@@ -1,5 +1,10 @@
 package mambutu;
 
+import mambutu.Plugins.BarHandler;
+import mambutu.Handler.MessageDistributor;
+import mambutu.Plugins.BugHandler;
+import mambutu.Plugins.WeatherHandler;
+
 /**
  * This file is part of Mambutu.
  * <p/>
@@ -21,6 +26,9 @@ package mambutu;
 public class Main {
     public static void main(String[] args) {
         Controller c = new Controller();
-
+        MessageDistributor messageDistributor = c.getBot().getMessageDistributor();
+        new BarHandler(messageDistributor);
+        new WeatherHandler(messageDistributor);
+        new BugHandler(messageDistributor);
     }
 }

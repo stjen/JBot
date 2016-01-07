@@ -5,10 +5,8 @@ import mambutu.Config;
 import mambutu.Exceptions.InvalidCTCPException;
 import mambutu.Exceptions.InvalidCommandException;
 import mambutu.Exceptions.InvalidServerCommandException;
-import mambutu.Plugins.Weather;
-import util.Log.FileLog;
-import util.Log.Log;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -29,13 +27,50 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p/>
  * Created by mabool on 11/24/15.
  */
-public class MessageHandler {
+public class MessageDistributor {
+
+    /**
+     * TODO: Special handlers for connection stuff like PING/PONG, authentication to nickserv etc
+     */
 
     Bot bot;
 
 
-    public MessageHandler(Bot bot) {
+    private ArrayList<Handler> ServerHandlers;
+    private ArrayList<Handler> CTCPHandlers;
+    private ArrayList<Handler> CommandHandlers;
+    private ArrayList<Handler> MessageHandlers;
+
+
+    public MessageDistributor(Bot bot) {
+        CTCPHandlers = new ArrayList<>();
+        CommandHandlers = new ArrayList<>();
+        MessageHandlers = new ArrayList<>();
+        ServerHandlers = new ArrayList<>();
         this.bot = bot;
+    }
+
+    public void registerCTCPHandler(Handler theHandler) {
+        CTCPHandlers.add(theHandler);
+    }
+
+    public void registerServerHandler(Handler theHandler) {
+        ServerHandlers.add(theHandler);
+    }
+
+    public void registerCommandHandler(Handler theHandler) {
+        CommandHandlers.add(theHandler);
+    }
+
+    public void registerMessageHandler(Handler theHandler) {
+        MessageHandlers.add(theHandler);
+    }
+
+    // Removes the handler from any list
+    public void unregisterHandler(Handler theHandler) {
+        CTCPHandlers.remove(theHandler);
+        CommandHandlers.remove(theHandler);
+        MessageHandlers.remove(theHandler);
     }
 
     public static String ctcp(String c) throws InvalidCTCPException {
@@ -47,30 +82,23 @@ public class MessageHandler {
         throw new InvalidCTCPException(c);
     }
 
-    public static String command(String nick, String target, String c) throws InvalidCommandException {
-        String[] incMsg = c.split("\\s+");
-        String location;
-        switch (incMsg[0].toLowerCase()) {
-            case "hello":
-                return "Rude.";
-            case "w":
-                location = c.replaceFirst("w", "").trim();
-                return Weather.getWeather(location);
-            case "fc":
-                /* Format the input string */
-                location = c.replaceFirst("fc", "").trim();
-                return Weather.getForecast(location);
-            case "bug":
-                Log.getInstance().add(c);
-                FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + "@" + target + ": " + c);
-                return "Added \"" + c + "\" to the bug log";
+    public String command(String nick, String target, String c) throws InvalidCommandException {
+        String[] command = c.split("\\s+");
+        String arg = c.replace(command[0], ""); // Removes the command from the string
 
+        /* Loop through all the registered command handlers, for each of them loop through all the commands
+         they are able to handle, and see if they match the command in question
+         If they do, call their handle(..) method */
+        for (int i = 0; i < CommandHandlers.size(); i++) {
+            if (CommandHandlers.get(i).handles(command[0]))
+                return CommandHandlers.get(i).handle(command[0], arg, nick);
         }
         throw new InvalidCommandException(c);
     }
 
     // https://tools.ietf.org/html/rfc1459#section-6
-    public static String server(String code) throws InvalidServerCommandException {
+
+    public String server(String code) throws InvalidServerCommandException {
         switch (code) {
             case "001": // We are connected
                 String outMsg = "";
@@ -85,5 +113,6 @@ public class MessageHandler {
         }
         throw new InvalidServerCommandException(code);
     }
+
 
 }
