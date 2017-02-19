@@ -2,9 +2,9 @@ package mambutu.Plugins;
 
 import mambutu.Handler.Handler;
 import mambutu.Handler.MessageDistributor;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import util.org.json.JSONArray;
+import util.org.json.JSONException;
+import util.org.json.JSONObject;
 import mambutu.Config;
 import mambutu.JSon.JsonReader;
 
@@ -38,11 +38,8 @@ public class WeatherHandler extends Handler {
         JSONObject json = null;
         JSONObject c_o;
 
-
         // Format input string
         location = location.replace(" ", "_");
-        System.out.println(location);
-
 
         try {
             json = JsonReader.readJsonFromUrl("http://api.wunderground.com/api/" + Config.WUNDERGROUND_API_KEY + "/conditions/q/" + location + ".json");

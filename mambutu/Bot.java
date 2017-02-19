@@ -31,6 +31,9 @@ public class Bot {
      */
 
     public static final char CTCP_CHAR = '\u0001';
+    public static final char MSG_INC_CHAR = '<';
+    public static final char MSG_OUT_CHAR = '>';
+
 
     private Controller con;
     private MessageDistributor messageDistributor;
@@ -59,6 +62,7 @@ public class Bot {
     public void handleMessage(String what) {
         what = what.trim();
         String[] incMsg = what.split("\\s+"); // Split by empty space
+        int incMsgLength = what.split("\\s+").length;
         String code = incMsg[1].trim(); // Grabs the code from the string
         String server = incMsg[0];
         if (serverName.equals("")) { // set the servername the first time we see it
@@ -72,36 +76,28 @@ public class Bot {
             outMsg = "PONG " + serverName;
         } else if (server.equals(serverName)) {
             outMsg = handleServer(what, incMsg);
-        } else { /** Handles everything else */
-            //System.out.println(code);
+        } else if (incMsgLength > 2) { /** Handles everything else */
             switch (code) {
                 case "PRIVMSG":
-                    /* Channel message */
-                    if (incMsg[2].charAt(0) == '#') {
-                        String channel = incMsg[2]; // The channel that the message was received in
+                        String receiver = incMsg[2]; // The receiver of the message (channel / nick)
                         String nick = what.split("!")[0].split(":")[1]; // The nick that sent it
-                        String message = what.split(channel + " :", 2)[1]; // The message that was received
+                        String message = what.split(receiver + " :", 2)[1]; // The message that was received
+                        //System.out.println("Receiver: " + receiver + " sender: " + nick + " message: " + message);
+                        if (message.length() > 0) {
                         /* CTCP */
-                        if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrounded by '\u0001'
-                            outMsg = handleCTCP(nick, message);
-                        }
+                            if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrounded by '\u0001'
+                                outMsg = handleCTCP(nick, message);
+                            }
                         /* Commands */
-                        if (message.toCharArray()[0] == Config.COMMAND_CHAR) {
-                            outMsg = handleCommand(nick, channel, message);
-                        }
-                    } else {
-                        /* Private message */
-                        String nick = what.split("!")[0].split(":")[1]; // The nick that sent it
-                        String message = what.split(":")[2]; // The message that was received
-                        if (message.toCharArray()[0] == CTCP_CHAR) { // Ctcps are surrolunded by '\u0001'
-                            outMsg = handleCTCP(nick, message);
-                        }
-                        /* Commands */
-                        if (message.toCharArray()[0] == Config.COMMAND_CHAR) {
-                            outMsg = handleCommand(nick, nick, message);
-                        }
+                            if (message.toCharArray()[0] == Config.COMMAND_CHAR) {
+                                  if (incMsg[2].charAt(0) == '#') { // Received from channel
+                                      outMsg = handleCommand(nick, receiver, message);
+                                  } else { // Received from user
+                                      outMsg = handleCommand(nick, nick, message);
+                                  }
+                            }
+                    //    }
                     }
-
                     break;
                 case "NOTICE": // Not handling notices for now
                     break;
@@ -118,6 +114,8 @@ public class Bot {
                     break;
 
             }
+        } else {
+            // Do nothing
         }
 
 
@@ -151,7 +149,7 @@ public class Bot {
             if (Config.APPEND_NICK_CMD)
                 outMsg += nick + ": ";
             outMsg += messageDistributor.command(nick, target, command); // Finds the appropriate answer
-            System.out.println("Command: " + command);
+            //System.out.println("Command: " + command);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("No command");
             outMsg = "";

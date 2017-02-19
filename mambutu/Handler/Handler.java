@@ -51,7 +51,7 @@ public abstract class Handler {
 
     public boolean handles(String command) {
         String[] tempHandles = handles.split(",");
-        System.out.println(tempHandles.toString());
+        //System.out.println(tempHandles.toString());
         for (int j = 0; j < tempHandles.length; j++) {
             if (tempHandles[j].trim().equals(command))
                 return true;

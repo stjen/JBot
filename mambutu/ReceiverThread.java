@@ -49,9 +49,8 @@ public class ReceiverThread extends Thread {
             // Keep building string until end of line
             if (data.substring(data.length() - 1).equals("\n")) {
                 if (!data.substring(0).equals("\n")) { // Don't pass on an empty string
-                    System.out.printf("< %s", data);
                     con.newInput(data);
-                    log.add("<" + data);
+                    log.add(data, Bot.MSG_INC_CHAR);
                 }
                 data = new String();
             }

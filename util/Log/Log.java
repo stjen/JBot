@@ -1,5 +1,7 @@
 package util.Log;
 
+import mambutu.Bot;
+
 public class Log {
     private StackADT<LogNode> stack = new ArrayStack<>();
     private static Log instance;
@@ -16,8 +18,9 @@ public class Log {
         this.printout = printout;
     }
 
-    public void add(String item) {
-        stack.push(new LogNode(item));
+    public void add(String item, char direction) {
+        stack.push(new LogNode(Bot.MSG_INC_CHAR + item));
+        System.out.print(Bot.MSG_INC_CHAR + " " + item);
     }
 
     public StackADT<LogNode> getAll() {

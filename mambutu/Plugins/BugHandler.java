@@ -20,7 +20,7 @@ public class BugHandler extends Handler {
      * -- Note --
      */
 
-    // Static because it is accessed before the handler is instanciated and it must be used for the superconstructor
+    // Static because it is accessed before the handler is instantiated and it must be used for the superconstructor
     private static String handles = "bug";
 
     public BugHandler(MessageDistributor messageDistributor) {
@@ -33,7 +33,7 @@ public class BugHandler extends Handler {
             return "The bug log can be found at: " + Config.BUG_LOG_FILE_URL;
         }
         try {
-            FileLog.writeToFile(Config.BUG_LOG_FILE, System.currentTimeMillis() + "-" + nick + ": " + args);
+            FileLog.writeToFile(Config.BUG_LOG_FILE_URL, System.currentTimeMillis() + "-" + nick + ": " + args);
         } catch (FileNotFoundException e) {
             System.out.println("Error writing to log file: " + e);
             return "Internal error adding bug";

@@ -31,8 +31,7 @@ public class SenderThread extends Thread {
 
     public void output(String what) {
 
-        System.out.printf("> %s", what);
-        log.add(">" + what);
+        log.add(what, Bot.MSG_OUT_CHAR);
         buffer.addToQueue(what.getBytes());
 
     }
