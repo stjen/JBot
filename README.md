@@ -6,7 +6,7 @@ The goal is to make an easily extendable IRC bot in Java, a lá eggdrop, but min
 
 As of now the bot is in a very alpha state - meaning it should not be trusted to do anything useful.
 
-I can be contacted on IRC: irc.freenode.org #coconuts, usually with the nick mabool
+I can be contacted on IRC: irc.freenode.org #peanuts, usually with the nick mabool
 
 # TODO
 
